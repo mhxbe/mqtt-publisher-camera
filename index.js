@@ -13,7 +13,7 @@ const client = mqtt.connect('mqtt://192.168.0.135', {
 });
 
 client.on('connect', () => {
-  client.subscribe('mqtt/camera');
+  client.subscribe('mqtt/take-picture');
 });
 
 client.on('message', (topic, message) => {
@@ -21,6 +21,6 @@ client.on('message', (topic, message) => {
   camera.takePhoto()
     .then((photoBuffer) => {
       console.log('Picture taken. Publish photoBuffer to \'mqtt/picture-taken\'', photoBuffer);
-      client.publish('mqtt/picture-taken', photoBuffer);
+      client.publish('mqtt/picture-taken', photoBuffer, { retain: true });
     }, error => error);
 });

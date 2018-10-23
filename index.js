@@ -9,18 +9,18 @@ const camera = new Raspistill({
 
 const client = mqtt.connect('mqtt://192.168.0.135', {
   port: 1883,
-  clientId: 'camera',
+  clientId: 'office-camera',
 });
 
 client.on('connect', () => {
-  client.subscribe('mqtt/take-picture');
+  client.subscribe('jidoka/office/take-picture');
 });
 
 client.on('message', (topic, message) => {
   console.log('topic:', topic, 'message:', message.toString());
   camera.takePhoto()
     .then((photoBuffer) => {
-      console.log('Picture taken. Publish photoBuffer to \'mqtt/picture-taken\'', photoBuffer);
-      client.publish('mqtt/picture-taken', photoBuffer, { retain: true });
+      console.log('Picture taken. Publish photoBuffer to \'jidoka/office/camera\'', photoBuffer);
+      client.publish('jidoka/office/camera', photoBuffer, { retain: false });
     }, error => error);
 });
